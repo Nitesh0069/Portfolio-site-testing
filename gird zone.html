@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to Grid Zone</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      background-color: black;
+      overflow: hidden;
+      position: relative;
+      font-family: 'Segoe UI', sans-serif;
+      color: white;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, rgba(128, 128, 128, 0.2) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(128, 128, 128, 0.2) 1px, transparent 1px),
+        radial-gradient(ellipse at center right,
+          rgba(0, 0, 0, 0) 30%,
+          rgba(0, 0, 0, 0.6) 70%,
+          rgba(0, 0, 0, 1) 100%);
+      background-size: 40px 40px, 40px 40px, 100% 100%;
+      background-blend-mode: multiply;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: flex-end;
+      gap: 2rem;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(8px);
+      z-index: 10;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #aaa;
+    }
+
+    .cursor-circle {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 60%);
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+      transition: opacity 0.2s ease;
+    }
+
+    .grid-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 2rem;
+      font-weight: bold;
+      text-align: center;
+      z-index: 5;
+      padding: 1rem 2rem;
+      background-color: rgba(0, 0, 0, 0.4);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(4px);
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <a href="gird zone.html">Grid Zone</a>
+    <a href="home.html">Home</a>
+    <a href="project.html">Projects</a>
+    <a href="#">Contacts</a>
+  </nav>
+
+  <div class="cursor-circle" id="cursorCircle"></div>
+  <div class="grid-text" id="gridText">Welcome to the Grid Zone</div>
+
+  <script>
+    const cursor = document.getElementById("cursorCircle");
+    const gridText = document.getElementById("gridText");
+
+    let targetX = 0, targetY = 0;
+    let currentX = 0, currentY = 0;
+    const speed = 0.1;
+
+    function isInsideTextZone(x, y) {
+      const rect = gridText.getBoundingClientRect();
+      return (
+        x >= rect.left &&
+        x <= rect.right &&
+        y >= rect.top &&
+        y <= rect.bottom
+      );
+    }
+
+    document.addEventListener("mousemove", (e) => {
+      targetX = e.clientX;
+      targetY = e.clientY;
+    });
+
+    function animate() {
+      currentX += (targetX - currentX) * speed;
+      currentY += (targetY - currentY) * speed;
+
+      const inside = isInsideTextZone(currentX, currentY);
+      cursor.style.opacity = inside ? "0" : "1";
+
+      cursor.style.transform = `translate(${currentX}px, ${currentY}px)`;
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+
+</html>
